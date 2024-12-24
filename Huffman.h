@@ -23,7 +23,7 @@ private:
     unordered_map<char,string> codeMap;
     unordered_map<string,char> deCodeMap;
 
-    void constructTree(unordered_map<char, int> frequencyMap);
+    void constructTree(HashMap<char, int> frequencyMap);
     void encodeCharacters(Node * rootNode, string codeString);
     void constructCodeMap();
     void construct(string inputFile);

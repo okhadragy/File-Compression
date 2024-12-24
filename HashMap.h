@@ -2,18 +2,18 @@
 #define HASHMAP_H
 
 template <typename K, typename V>
-struct Node {
+struct Pair {
     K key;
     V value;
-    Node* next;
+    Pair* next;
 
-    Node(const K& key, const V& value) : key(key), value(value), next(nullptr) {}
+    Pair(const K& key, const V& value) : key(key), value(value), next(nullptr) {}
 };
 
 template <typename K, typename V>
 class HashMap {
 private:
-    Node<K, V>** table; 
+    Pair<K, V>** table; 
     int capacity;       
     int size;          
     int hashFunction(const K& key) const; 
@@ -21,7 +21,7 @@ private:
 public:
     HashMap(int capacity);
     ~HashMap();
-
+    Pair<K, V>** getTable();
     void insert(const K& key, const V& value); 
     bool get(const K& key, V& value) const;   
     bool remove(const K& key);                

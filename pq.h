@@ -4,11 +4,10 @@ using namespace std;
 #ifndef PQ_H
 #define PQ_H
 
-template <typename t,typename y,typename comparator>
+template <typename t>
 class PQ {
 private:
 	t* heap;
-	comparator compare;
 	int heapsize;
 	int parent(int& i)const;
 	int leftchild(int& i)const;

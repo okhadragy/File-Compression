@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "HashMap.cpp"
 
 using namespace std;
 
@@ -8,9 +9,9 @@ using namespace std;
 class FrequencyCounter {
 
 private:
-    unordered_map<char,int> frequencyMap;
+    HashMap<char, int> frequencyMap;
 public:
-    const unordered_map<char, int> &getFrequencyMap() const;
+    const HashMap<char, int> &getFrequencyMap() const;
     void readFile(string fileName);
     FrequencyCounter(string fileName);
 };

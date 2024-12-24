@@ -1,5 +1,7 @@
 #include "Huffman.h"
 #include "FrequencyCounter.cpp"
+#include "HashMap.cpp"
+
 
 #define INTERNAL_NODE_CHARACTER char(128)
 #define THE_EOF char(129)
@@ -10,15 +12,23 @@ int Huffman::myCompartor::operator()(Node *node1, Node *node2)
     return node1->frequency > node2->frequency;
 }
 
-void Huffman::constructTree(unordered_map<char, int> frequencyMap)
+void Huffman::constructTree(HashMap<char, int> frequencyMap)
 {
     priority_queue<Node *, vector<Node *>, myCompartor> HufferQueue;
     Node *leftNode, *rightNode, *newNode;
+    Pair<char, int>** table = frequencyMap.getTable();
 
-    for (const auto &item : frequencyMap)
+    for (int i = 0; i < frequencyMap.getSize(); i++)
     {
-        HufferQueue.push(new Node(item.first, item.second));
+        Pair<char, int>* current = table[i];
+        
+        while (current)
+        {
+            HufferQueue.push(new Node(current->key, current->value));
+            current = current->next;
+        }
     }
+    
     HufferQueue.push(new Node(THE_EOF, 1));
 
     while (HufferQueue.size() != 1)

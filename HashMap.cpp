@@ -5,7 +5,7 @@
 template <typename K, typename V>
 HashMap<K, V>::HashMap(int capacity)
     : capacity(capacity), size(0) {
-    table = new Node<K, V>*[capacity];
+    table = new Pair<K, V>*[capacity];
     for (int i = 0; i < capacity; i++) {
         table[i] = nullptr;
     }
@@ -14,14 +14,19 @@ HashMap<K, V>::HashMap(int capacity)
 template <typename K, typename V>
 HashMap<K, V>::~HashMap() {
     for (int i = 0; i < capacity; i++) {
-        Node<K, V>* current = table[i];
+        Pair<K, V>* current = table[i];
         while (current) {
-            Node<K, V>* temp = current;
+            Pair<K, V>* temp = current;
             current = current->next;
             delete temp;
         }
     }
     delete[] table;
+}
+
+template <typename K, typename V>
+Pair<K, V>** HashMap<K, V>::getTable(){
+    return table;
 }
 
 template <typename K, typename V>
@@ -32,7 +37,7 @@ int HashMap<K, V>::hashFunction(const K& key) const {
 template <typename K, typename V>
 void HashMap<K, V>::insert(const K& key, const V& value) {
     int index = hashFunction(key);
-    Node<K, V>* current = table[index];
+    Pair<K, V>* current = table[index];
 
     while (current) {
         if (current->key == key) {
@@ -41,16 +46,16 @@ void HashMap<K, V>::insert(const K& key, const V& value) {
         }
         current = current->next;
     }
-    Node<K, V>* newNode = new Node<K, V>(key, value);
-    newNode->next = table[index];
-    table[index] = newNode;
+    Pair<K, V>* newPair = new Pair<K, V>(key, value);
+    newPair->next = table[index];
+    table[index] = newPair;
     size++;
 }
 
 template <typename K, typename V>
 bool HashMap<K, V>::get(const K& key, V& value) const {
     int index = hashFunction(key);
-    Node<K, V>* current = table[index];
+    Pair<K, V>* current = table[index];
 
     while (current) {
         if (current->key == key) {
@@ -64,8 +69,8 @@ bool HashMap<K, V>::get(const K& key, V& value) const {
 template <typename K, typename V>
 bool HashMap<K, V>::remove(const K& key) {
     int index = hashFunction(key);
-    Node<K, V>* current = table[index];
-    Node<K, V>* prev = nullptr;
+    Pair<K, V>* current = table[index];
+    Pair<K, V>* prev = nullptr;
 
     while (current) {
         if (current->key == key) {

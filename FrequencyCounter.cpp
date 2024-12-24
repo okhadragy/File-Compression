@@ -1,6 +1,7 @@
 #include "FrequencyCounter.h"
+#include "HashMap.cpp"
 
-const unordered_map<char, int> &FrequencyCounter::getFrequencyMap() const {
+const HashMap<char, int> &FrequencyCounter::getFrequencyMap() const {
     return frequencyMap;
 }
 
@@ -20,12 +21,16 @@ void FrequencyCounter::readFile(string fileName) {
     }
     
     while(inputFile.get(character)){
-        frequencyMap[character]++;
+        int val; 
+        if (!frequencyMap.get(character,val))
+        {
+            val = 0;
+        }
+        frequencyMap.insert(character,val+1);
     }
     inputFile.close();
 }
 
-FrequencyCounter::FrequencyCounter(string fileName){
+FrequencyCounter::FrequencyCounter(string fileName): frequencyMap(200){
     readFile(fileName);
 }
-
