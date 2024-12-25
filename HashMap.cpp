@@ -27,7 +27,7 @@ HashMap<K, V>::~HashMap() {
 }
 
 template <typename K, typename V>
-Pair<K, V>** HashMap<K, V>::getTable(){
+Pair<K, V>** HashMap<K, V>::getTable() const{
     return table;
 }
 

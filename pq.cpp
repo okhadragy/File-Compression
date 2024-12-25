@@ -7,7 +7,7 @@ PQ<t>::PQ() :heapsize(0) {
 
 template <typename t>
 PQ<t>::~PQ(){
-	delete heap;
+	delete[] heap;
 }
 
 template <typename t>

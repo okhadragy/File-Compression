@@ -28,7 +28,7 @@ private:
     HashMap<char, string> codeMap;
     HashMap<string, char> deCodeMap;
 
-    void constructTree(HashMap<char, int> frequencyMap);
+    void constructTree(const HashMap<char, int> & frequencyMap);
     void encodeCharacters(Node *rootNode, string codeString);
     void constructCodeMap();
     void construct(string inputFile);

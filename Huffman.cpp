@@ -13,10 +13,9 @@ Huffman::~Huffman()
     delete root;
 }
 
-void Huffman::constructTree(HashMap<char, int> frequencyMap)
+void Huffman::constructTree(const HashMap<char, int> & frequencyMap)
 {
-    /*
-    //PQ<Node *> HufferQueue;
+    PQ<Node *> HufferQueue;
     Node *leftNode, *rightNode, *newNode;
     Pair<char, int> **table = frequencyMap.getTable();
     Pair<char, int> *current;
@@ -27,12 +26,12 @@ void Huffman::constructTree(HashMap<char, int> frequencyMap)
 
         while (current)
         {
-            //HufferQueue.push(new Node(current->key, current->value));
+            HufferQueue.push(new Node(current->key, current->value));
             current = current->next;
         }
     }
     
-    //HufferQueue.push(new Node(THE_EOF, 1));
+    HufferQueue.push(new Node(THE_EOF, 1));
     
     while (HufferQueue.getSize() != 1)
     {
@@ -47,7 +46,6 @@ void Huffman::constructTree(HashMap<char, int> frequencyMap)
     }
 
     root = HufferQueue.top();
-    */
 }
 
 void Huffman::encodeCharacters(Node *rootNode, string codeString)
@@ -151,9 +149,7 @@ void Huffman::construct(string inputFile)
 
 void Huffman::compressTofile(string inputFile, string outputFile)
 {
-    FrequencyCounter f(inputFile);
-    constructTree(f.getFrequencyMap());
-    //constructCodeMap();
+    construct(inputFile);
 
     Pair<char, string> **table = codeMap.getTable();
     Pair<char, string> *current;

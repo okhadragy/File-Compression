@@ -21,7 +21,7 @@ private:
 public:
     HashMap(int capacity);
     ~HashMap();
-    Pair<K, V>** getTable();
+    Pair<K, V>** getTable() const;
     void insert(const K& key, const V& value); 
     bool get(const K& key, V& value) const;   
     bool remove(const K& key);                
