@@ -25,7 +25,7 @@ public:
     void insert(const K& key, const V& value); 
     bool get(const K& key, V& value) const;   
     bool remove(const K& key);                
-    int getSize() const;                      
+    int getSize() const;    
+    int getCapacity() const;                  
 };
-#include "HashMap.cpp"
 #endif 

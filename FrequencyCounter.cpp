@@ -1,5 +1,4 @@
 #include "FrequencyCounter.h"
-#include "HashMap.cpp"
 
 const HashMap<char, int> &FrequencyCounter::getFrequencyMap() const {
     return frequencyMap;

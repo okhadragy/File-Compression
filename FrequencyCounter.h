@@ -1,4 +1,3 @@
-#include <bits/stdc++.h>
 #include "HashMap.cpp"
 
 using namespace std;

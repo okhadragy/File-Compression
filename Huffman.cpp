@@ -1,37 +1,40 @@
 #include "Huffman.h"
-#include "FrequencyCounter.cpp"
-#include "HashMap.cpp"
-
-
 #define INTERNAL_NODE_CHARACTER char(128)
 #define THE_EOF char(129)
 #define HEADER_TEXT_SEPERATOR char(132)
 
-int Huffman::myCompartor::operator()(Node *node1, Node *node2)
+Huffman::Huffman()
+    : root(0), codeMap(200), deCodeMap(200)
 {
-    return node1->frequency > node2->frequency;
+}
+
+Huffman::~Huffman()
+{
+    delete root;
 }
 
 void Huffman::constructTree(HashMap<char, int> frequencyMap)
 {
-    priority_queue<Node *, vector<Node *>, myCompartor> HufferQueue;
+    /*
+    //PQ<Node *> HufferQueue;
     Node *leftNode, *rightNode, *newNode;
-    Pair<char, int>** table = frequencyMap.getTable();
+    Pair<char, int> **table = frequencyMap.getTable();
+    Pair<char, int> *current;
 
-    for (int i = 0; i < frequencyMap.getSize(); i++)
+    for (int i = 0; i < frequencyMap.getCapacity(); i++)
     {
-        Pair<char, int>* current = table[i];
-        
+        current = table[i];
+
         while (current)
         {
-            HufferQueue.push(new Node(current->key, current->value));
+            //HufferQueue.push(new Node(current->key, current->value));
             current = current->next;
         }
     }
     
-    HufferQueue.push(new Node(THE_EOF, 1));
-
-    while (HufferQueue.size() != 1)
+    //HufferQueue.push(new Node(THE_EOF, 1));
+    
+    while (HufferQueue.getSize() != 1)
     {
         leftNode = HufferQueue.top();
         HufferQueue.pop();
@@ -42,7 +45,9 @@ void Huffman::constructTree(HashMap<char, int> frequencyMap)
         newNode->left = leftNode;
         newNode->right = rightNode;
     }
+
     root = HufferQueue.top();
+    */
 }
 
 void Huffman::encodeCharacters(Node *rootNode, string codeString)
@@ -52,7 +57,7 @@ void Huffman::encodeCharacters(Node *rootNode, string codeString)
         return;
     if (rootNode->character != INTERNAL_NODE_CHARACTER)
     {
-        codeMap[rootNode->character] = codeString;
+        codeMap.insert(rootNode->character, codeString);
     }
 
     encodeCharacters(rootNode->left, codeString + "0");
@@ -67,12 +72,20 @@ void Huffman::constructCodeMap()
 void Huffman::readFile(ifstream &inputStream, string &file, char &remainder)
 {
     char character;
+    string code;
+
     while (inputStream.get(character))
     {
-        file += codeMap[character];
+        if (codeMap.get(character, code))
+        {
+            file += code;
+        }
     }
     inputStream.close();
-    file += codeMap[THE_EOF];
+    if (codeMap.get(THE_EOF, code))
+    {
+        file += code;
+    }
 
     // complete the last 8 bits
     remainder = 8 - file.size() % 8;
@@ -97,15 +110,24 @@ void Huffman::encodeFile(ifstream &inputStream, string &encodedFile, char &remai
 
 void Huffman::writeHeader(ofstream &outputStream, char remainder)
 {
-    for (const auto &item : codeMap)
+    Pair<char, string> **table = codeMap.getTable();
+    Pair<char, string> *current;
+
+    for (int i = 0; i < codeMap.getCapacity(); i++)
     {
-        stringstream stringStream(item.second);
-        bitset<8> bits;
-        stringStream >> bits;
-        char c = char(bits.to_ulong());
-        outputStream << c << (char)item.second.size() << item.first;
+        current = table[i];
+
+        while (current)
+        {
+            stringstream stringStream(current->value);
+            bitset<8> bits;
+            stringStream >> bits;
+            char c = char(bits.to_ulong());
+            outputStream << c << (char)(current->value).size() << current->key;
+            current = current->next;
+        }
     }
-    
+
     outputStream << HEADER_TEXT_SEPERATOR << remainder;
 }
 
@@ -129,7 +151,12 @@ void Huffman::construct(string inputFile)
 
 void Huffman::compressTofile(string inputFile, string outputFile)
 {
-    construct(inputFile);
+    FrequencyCounter f(inputFile);
+    constructTree(f.getFrequencyMap());
+    //constructCodeMap();
+
+    Pair<char, string> **table = codeMap.getTable();
+    Pair<char, string> *current;
     string file;
     char remainder;
     ifstream inputStream;
@@ -150,8 +177,7 @@ void Huffman::compressTofile(string inputFile, string outputFile)
     {
         throw logic_error("The input file is empty.");
     }
-    
-    
+
     encodeFile(inputStream, file, remainder);
     writeHeader(outputStream, remainder);
     writeFile(outputStream, file);
@@ -163,12 +189,12 @@ void Huffman::readHeader(ifstream &inputStream)
     string code;
     inputStream.get(codeChar);
     while (codeChar != HEADER_TEXT_SEPERATOR)
-    {   
+    {
         inputStream.get(sizeChar);
         inputStream.get(character);
         bitset<8> bits(codeChar);
-        code = bits.to_string().substr((8-(int)sizeChar),8);
-        deCodeMap[code] = character;
+        code = bits.to_string().substr((8 - (int)sizeChar), 8);
+        deCodeMap.insert(code, character);
         inputStream.get(codeChar);
     }
 }
@@ -190,14 +216,16 @@ void Huffman::readEncodedFile(ifstream &inputStream, string &file)
 void Huffman::decodeFile(ifstream &inputStream, string &decodedFile)
 {
     string file, code;
+    char c;
 
     readEncodedFile(inputStream, file);
     for (int i = 0; i < file.size(); i++)
     {
         code += file[i];
-        if (deCodeMap.find(code) != deCodeMap.end())
+
+        if (deCodeMap.get(code, c))
         {
-            decodedFile += deCodeMap[code];
+            decodedFile += c;
             code = "";
         }
     }

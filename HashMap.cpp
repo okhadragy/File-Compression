@@ -2,6 +2,8 @@
 #include "HashMap.h"
 #include <iostream>
 
+using namespace std;
+
 template <typename K, typename V>
 HashMap<K, V>::HashMap(int capacity)
     : capacity(capacity), size(0) {
@@ -36,6 +38,7 @@ int HashMap<K, V>::hashFunction(const K& key) const {
 
 template <typename K, typename V>
 void HashMap<K, V>::insert(const K& key, const V& value) {
+    
     int index = hashFunction(key);
     Pair<K, V>* current = table[index];
 
@@ -91,4 +94,9 @@ bool HashMap<K, V>::remove(const K& key) {
 template <typename K, typename V>
 int HashMap<K, V>::getSize() const {
     return size;
+}
+
+template <typename K, typename V>
+int HashMap<K, V>::getCapacity() const {
+    return capacity;
 }

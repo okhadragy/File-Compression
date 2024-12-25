@@ -9,17 +9,18 @@ class PQ {
 private:
 	t* heap;
 	int heapsize;
-	int parent(int& i)const;
-	int leftchild(int& i)const;
-	int rightchild(int& i)const;
-	void bubbleup(int& i);
-	void bubbledown(int& i);
+	int parent(const int& i)const;
+	int leftchild(const int& i)const;
+	int rightchild(const int& i)const;
+	void bubbleup(const int& i);
+	void bubbledown(const int& i);
+	bool compare(t f, t s)const;
 public:
 	PQ();
+	~PQ();
 	t top() const;
-	void push(t& element);
+	void push(const t& element);
 	void pop();
+	int getSize();
 };
-
-
 #endif 
