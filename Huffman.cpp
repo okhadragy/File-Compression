@@ -210,7 +210,6 @@ void Huffman::readHeader(ifstream &inputStream)
         bitset<8> bits(codeChar);
         code = bits.to_string().substr((8 - (int)sizeChar), 8);
         deCodeMap.insert(code, character);
-        cout << code << character << endl;
         inputStream.get(codeChar);
     }
 }
