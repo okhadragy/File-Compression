@@ -5,8 +5,8 @@ int main(int argc, char const *argv[])
     try
     {
         Huffman h;
-        h.compressTofile("file.txt","file2.txt");
-        h.decompressToFile("file2.txt","file3.txt");
+        h.compressTofile("hello.png","file2.txt");
+        h.decompressToFile("file2.txt","hello2.png");
     }
     catch(const std::logic_error& e)
     {

@@ -4,7 +4,7 @@
 #define HEADER_TEXT_SEPERATOR char(132)
 
 Huffman::Huffman()
-    : root(0), codeMap(200), deCodeMap(200)
+    : root(0), codeMap(1000), deCodeMap(1000)
 {
 }
 
@@ -13,7 +13,7 @@ Huffman::~Huffman()
     delete root;
 }
 
-void Huffman::constructTree(const HashMap<char, int> & frequencyMap)
+void Huffman::constructTree(const HashMap<char, int> &frequencyMap)
 {
     PQ<Node *> HufferQueue;
     Node *leftNode, *rightNode, *newNode;
@@ -30,9 +30,9 @@ void Huffman::constructTree(const HashMap<char, int> & frequencyMap)
             current = current->next;
         }
     }
-    
+
     HufferQueue.push(new Node(THE_EOF, 1));
-    
+
     while (HufferQueue.getSize() != 1)
     {
         leftNode = HufferQueue.top();
@@ -71,17 +71,29 @@ void Huffman::readFile(ifstream &inputStream, string &file, char &remainder)
 {
     char character;
     string code;
+    bitset<8> bits;
 
     while (inputStream.get(character))
     {
         if (codeMap.get(character, code))
         {
+            if (code.size() >= 8)
+            {
+                bitset<8> bits(character);
+                code = bits.to_string();
+            }
             file += code;
         }
     }
     inputStream.close();
+
     if (codeMap.get(THE_EOF, code))
     {
+        if (code.size() >= 8)
+        {
+            bitset<8> bits(THE_EOF);
+            code = bits.to_string();
+        }
         file += code;
     }
 
@@ -99,10 +111,11 @@ void Huffman::encodeFile(ifstream &inputStream, string &encodedFile, char &remai
     readFile(inputStream, file, remainder);
     stringstream stringStream(file);
     bitset<8> bits;
+    char code;
     while (stringStream >> bits)
     {
-        char c = char(bits.to_ulong());
-        encodedFile += c;
+        code = char(bits.to_ulong());
+        encodedFile += code;
     }
 }
 
@@ -110,6 +123,7 @@ void Huffman::writeHeader(ofstream &outputStream, char remainder)
 {
     Pair<char, string> **table = codeMap.getTable();
     Pair<char, string> *current;
+    char code, size;
 
     for (int i = 0; i < codeMap.getCapacity(); i++)
     {
@@ -120,12 +134,17 @@ void Huffman::writeHeader(ofstream &outputStream, char remainder)
             stringstream stringStream(current->value);
             bitset<8> bits;
             stringStream >> bits;
-            char c = char(bits.to_ulong());
-            outputStream << c << (char)(current->value).size() << current->key;
+            code = current->key;
+            size = 8;
+            if (current->value.size() < 8)
+            {
+                code = char(bits.to_ulong());
+                size = current->value.size();
+            }
+            outputStream << code << size << current->key;
             current = current->next;
         }
     }
-
     outputStream << HEADER_TEXT_SEPERATOR << remainder;
 }
 
@@ -191,6 +210,7 @@ void Huffman::readHeader(ifstream &inputStream)
         bitset<8> bits(codeChar);
         code = bits.to_string().substr((8 - (int)sizeChar), 8);
         deCodeMap.insert(code, character);
+        cout << code << character << endl;
         inputStream.get(codeChar);
     }
 }

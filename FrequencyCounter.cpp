@@ -8,7 +8,7 @@ void FrequencyCounter::readFile(string fileName) {
     char character;
     ifstream inputFile;
 
-    inputFile.open(fileName, ios::in);
+    inputFile.open(fileName, ios::binary);
     if (!inputFile.is_open())
     {
         throw logic_error("Can't open the input file.");
@@ -19,8 +19,8 @@ void FrequencyCounter::readFile(string fileName) {
         throw logic_error("The input file is empty.");
     }
     
+    int val;
     while(inputFile.get(character)){
-        int val; 
         if (!frequencyMap.get(character,val))
         {
             val = 0;

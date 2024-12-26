@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 template <typename T>
 class LinkedList
@@ -12,9 +11,9 @@ class LinkedList
         Node *next;
 
     };
-    using NodePointer = Node*;
+    typedef Node* NodePointer;
     private:
-    Nodepointer head;
+    NodePointer head;
 
     public:
 
@@ -23,6 +22,5 @@ class LinkedList
     NodePointer search(T value)const;
     int indexOf(T value)const;
     bool isEmpty()const;
-
 
 };

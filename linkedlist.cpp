@@ -2,22 +2,22 @@
 #include <iostream>
 
 template <typename T>
-LinkedList<typename T> :: LinkedList() : head(nullptr);
+LinkedList<T>::LinkedList() : head(nullptr);
 
 template <typename T>
-LinkedList<typename T> :: ~LinkedList()
+LinkedList<T>::~LinkedList()
 {
-    Nodepointer current=head;
+    NodePointer current=head;
     while(current ! =nullptr)
     {
-    Nodepointer next = current->next;
+    NodePointer next = current->next;
     delete current;
     current = next;
     }
 }
 
 template <typename T>
-LinkedList<typename T> :: NodePointer LinkedList<T> :: search(T value)const
+LinkedList<T>::NodePointer LinkedList<T> :: search(T value)const
 {
     NodePointer current = head;
     while(current->data ! =nullptr)
@@ -31,7 +31,7 @@ LinkedList<typename T> :: NodePointer LinkedList<T> :: search(T value)const
 }
 
 template <typename T>
-int LinkedList<typename T> :: indexOf(T value)const
+int LinkedList<T>::indexOf(T value)const
 {
     NodePointer current = head;
     int index = 0;
@@ -47,7 +47,7 @@ int LinkedList<typename T> :: indexOf(T value)const
 }
 
 template <typename T>
-bool LinkedList <typename T> :: isEmpty()const
+bool LinkedList <T>::isEmpty()const
 {
     return head->data == nullptr;
 }
